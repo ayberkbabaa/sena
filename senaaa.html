@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sena Barışalım mı?</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffe6f0, #fff0f5);
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.4rem;
+      color: #333;
+      margin-bottom: 40px;
+    }
+    #buttons {
+      display: flex;
+      gap: 20px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #yesBtn {
+      background-color: #4caf50;
+      color: white;
+      transform: scale(1);
+    }
+    #noBtn {
+      background-color: #f44336;
+      color: white;
+    }
+    #yesBtn.fullscreen {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(25);
+      z-index: 9999;
+    }
+    #loveMessage {
+      font-size: 2.5rem;
+      color: #e91e63;
+      margin-top: 40px;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    #loveMessage.visible {
+      opacity: 1;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9998;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Bu saçma küslüğe son versek olur mu Senaaa?</h1>
+<div id="buttons">
+  <button id="yesBtn">Evet 🤍</button>
+  <button id="noBtn">Hayır</button>
+</div>
+
+<canvas id="confetti"></canvas>
+<div id="loveMessage">SENİ ÇOK SEVİYORUM.</div>
+
+<script>
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const loveMsg = document.getElementById("loveMessage");
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+
+  let clickCount = 0;
+  let scale = 1;
+
+  noBtn.addEventListener("click", () => {
+    clickCount++;
+    if (clickCount < 5) {
+      scale += 0.3;
+      yesBtn.style.transform = `scale(${scale})`;
+    } else {
+      yesBtn.classList.add("fullscreen");
+    }
+  });
+
+  function confettiBurst() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confettis = [];
+    for (let i = 0; i < 150; i++) {
+      confettis.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        size: Math.random() * 6 + 4,
+        color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+        speed: Math.random() * 3 + 2
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let c of confettis) {
+        c.y += c.speed;
+        ctx.fillStyle = c.color;
+        ctx.fillRect(c.x, c.y, c.size, c.size);
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  yesBtn.addEventListener("click", () => {
+    confettiBurst();
+    loveMsg.classList.add("visible");
+  });
+</script>
+
+</body>
+</html>
